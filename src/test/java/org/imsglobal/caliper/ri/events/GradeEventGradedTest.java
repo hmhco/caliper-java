@@ -34,10 +34,10 @@ import org.imsglobal.caliper.entities.agent.Person;
 import org.imsglobal.caliper.entities.agent.Role;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
 import org.imsglobal.caliper.entities.agent.Status;
+import org.imsglobal.caliper.entities.outcome.Score;
 import org.imsglobal.caliper.entities.resource.Assessment;
 import org.imsglobal.caliper.entities.resource.Attempt;
-import org.imsglobal.caliper.entities.session.Session;
-import org.imsglobal.caliper.events.AssessmentEvent;
+import org.imsglobal.caliper.events.GradeEvent;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -48,67 +48,68 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class AssessmentEventStartedTest {
+public class GradeEventGradedTest {
     private JsonldContext context;
     private String id;
-    private Person actor;
-    private Assessment object;
-    private Attempt generated;
-    private SoftwareApplication edApp;
-    private CourseSection group;
+    private SoftwareApplication actor, edApp;
+    private Person learner;
+    private Attempt object;
+    private Assessment assignable;
+    private Score generated;
     private Membership membership;
-    private Session session;
-    private AssessmentEvent event;
+    private GradeEvent event;
 
-    
     private static final String BASE_URN = "urn:uuid:";
     private static final String BASE_IRI = "https://www.hmhco.com/";
     private static final String APP_NAME = "ReadingInventory";
+
 
     @Before
     public void setUp() throws Exception {
         context = JsonldStringContext.getDefault();
 
-        id = BASE_URN + "27734504-068d-4596-861c-2315be33a2a2";
+        id = "urn:uuid:a50ca17f-5971-47bb-8fca-4e6e6879001d";
 
-        actor = Person.builder().id(BASE_URN.concat("0f4fedbe-2227-415f-8553-40731a627171"))
-                .name("Casandra Rath").build();
-        Person assignee = Person.builder().id(actor.getId()).coercedToId(true).build();
+        actor = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).version("v2").build();
+        learner = Person.builder().id(BASE_URN.concat("0f4fedbe-2227-415f-8553-40731a627171"))
+                    .name("Casandra Rath").build();
+        assignable = Assessment.builder().id(BASE_URN.concat("c050e852-5edb-4743-92d1-b53466de3a5f")).build();
 
-        object = Assessment.builder()
-            .id(BASE_URN.concat("c050e852-5edb-4743-92d1-b53466de3a5f"))
-            .name(APP_NAME)
-            .dateToStartOn(new DateTime(2016, 11, 14, 5, 0, 0, 0, DateTimeZone.UTC))
-            .dateToSubmit(new DateTime(2016, 11, 18, 11, 59, 59, 0, DateTimeZone.UTC))
-            .maxAttempts(1)
-            .maxSubmits(1)
-            .maxScore(25.0)
-            .version("1.0")
+        object = Attempt.builder()
+            .id(BASE_URN.concat("c35603f7a3434e2cb74ef14d60e70f42"))
+            .assignable(assignable)
+            .assignee(learner)
+            .count(100)
+            .dateCreated(new DateTime(2016, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
+            .startedAtTime(new DateTime(2016, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
+            .endedAtTime(new DateTime(2016, 11, 15, 10, 55, 12, 0, DateTimeZone.UTC))
             .build();
 
-        generated = Attempt.builder()
-            .id(BASE_URN.concat("c35603f7a3434e2cb74ef14d60e70f42"))
-            .assignable(Assessment.builder().id(object.getId()).coercedToId(true).build())
-            .assignee(assignee)
-            .count(1)
-            .dateCreated(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
-            .startedAtTime(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
+        generated = Score.builder()
+            .id(BASE_URN.concat("c050e852-5edb-4743-92d1-b53466de3a5f"))
+            .attempt(Attempt.builder().id(object.getId()).coercedToId(true).build())
+            .maxScore(1700)
+            .scoreGiven(800)
+            .scoredBy(SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).coercedToId(true).build())
+            .comment("The lexile score from Test Quiz # c35603f7a3434e2cb74ef14d60e70f42 taken on date/time for student 0f4fedbe-2227-415f-8553-40731a627171")
+            .dateCreated(new DateTime(2016, 11, 15, 10, 56, 0, 0, DateTimeZone.UTC))
             .build();
 
         edApp = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).version("v2").build();
 
         membership = Membership.builder()
-            .id(actor.getId())
-            .organization(Organization.builder().id(BASE_URN.concat("ab570d90-3791-4048-a5ee-759657ddccef")).type(EntityType.ORGANIZATION)
-                .subOrganizationOf(Organization.builder().id(BASE_URN.concat("ea827de8-0ce9-4fe4-a28c-eb388bd9eb92")).type(EntityType.ORGANIZATION)
-                        .build())
-                .build())
-            .status(Status.ACTIVE)
-            .role(Role.LEARNER)
-            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
-            .build();
-
-        event = buildEvent(Action.STARTED);
+                .id(learner.getId())
+                .organization(Organization.builder().id(BASE_URN.concat("ab570d90-3791-4048-a5ee-759657ddccef")).type(EntityType.ORGANIZATION)
+                    .subOrganizationOf(Organization.builder().id(BASE_URN.concat("ea827de8-0ce9-4fe4-a28c-eb388bd9eb92")).type(EntityType.ORGANIZATION)
+                            .build())
+                    .build())
+                .status(Status.ACTIVE)
+                .role(Role.LEARNER)
+                .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
+                .build();
+        
+        // Build Outcome Event
+        event = buildEvent(Action.GRADED);
     }
 
     @Test
@@ -116,13 +117,13 @@ public class AssessmentEventStartedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/hmh-ri/caliperEventAssessmentStarted.json");
+        String fixture = jsonFixture("fixtures/hmh-ri/caliperEventGradeGraded.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void assessmentEventRejectsSearchedAction() {
-        buildEvent(Action.SEARCHED);
+    public void gradeEventRejectsHidAction() {
+        buildEvent(Action.HID);
     }
 
     @After
@@ -131,23 +132,21 @@ public class AssessmentEventStartedTest {
     }
 
     /**
-     * Build Assessment event
+     * Build Grade event.
      * @param action
      * @return event
      */
-    private AssessmentEvent buildEvent(Action action) {
-        return AssessmentEvent.builder()
+    private GradeEvent buildEvent(Action action) {
+        return GradeEvent.builder()
             .context(context)
             .id(id)
             .actor(actor)
             .action(action)
             .object(object)
             .generated(generated)
-            .eventTime(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
             .edApp(edApp)
-            .group(group)
             .membership(membership)
-            .session(session)
+            .eventTime(new DateTime(2016, 11, 15, 10, 57, 6, 0, DateTimeZone.UTC))
             .build();
     }
 }
