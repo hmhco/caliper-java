@@ -27,7 +27,6 @@ import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.EntityType;
-import org.imsglobal.caliper.entities.agent.CourseSection;
 import org.imsglobal.caliper.entities.agent.Membership;
 import org.imsglobal.caliper.entities.agent.Organization;
 import org.imsglobal.caliper.entities.agent.Person;
@@ -51,8 +50,8 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 public class GradeEventGradedTest {
     private JsonldContext context;
     private String id;
-    private SoftwareApplication actor, edApp;
-    private Person learner;
+    private SoftwareApplication edApp;
+    private Person actor;
     private Attempt object;
     private Assessment assignable;
     private Score generated;
@@ -70,16 +69,17 @@ public class GradeEventGradedTest {
 
         id = "urn:uuid:a50ca17f-5971-47bb-8fca-4e6e6879001d";
 
-        actor = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).version("v2").build();
-        learner = Person.builder().id(BASE_URN.concat("0f4fedbe-2227-415f-8553-40731a627171"))
+        //actor = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).version("v2").build();
+        actor = Person.builder().id(BASE_URN.concat("0f4fedbe-2227-415f-8553-40731a627171"))
                     .name("Casandra Rath").build();
+        
         assignable = Assessment.builder().id(BASE_URN.concat("c050e852-5edb-4743-92d1-b53466de3a5f")).build();
 
         object = Attempt.builder()
             .id(BASE_URN.concat("c35603f7a3434e2cb74ef14d60e70f42"))
             .assignable(assignable)
-            .assignee(learner)
-            .count(100)
+            .assignee(Person.builder().id(BASE_URN.concat("0f4fedbe-2227-415f-8553-40731a627171")).coercedToId(true).build())
+            .count(35)
             .dateCreated(new DateTime(2016, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
             .startedAtTime(new DateTime(2016, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
             .endedAtTime(new DateTime(2016, 11, 15, 10, 55, 12, 0, DateTimeZone.UTC))
@@ -95,10 +95,10 @@ public class GradeEventGradedTest {
             .dateCreated(new DateTime(2016, 11, 15, 10, 56, 0, 0, DateTimeZone.UTC))
             .build();
 
-        edApp = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).version("v2").build();
+        edApp = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).coercedToId(true).build();
 
         membership = Membership.builder()
-                .id(learner.getId())
+                .id(actor.getId())
                 .organization(Organization.builder().id(BASE_URN.concat("ab570d90-3791-4048-a5ee-759657ddccef")).type(EntityType.ORGANIZATION)
                     .subOrganizationOf(Organization.builder().id(BASE_URN.concat("ea827de8-0ce9-4fe4-a28c-eb388bd9eb92")).type(EntityType.ORGANIZATION)
                             .build())

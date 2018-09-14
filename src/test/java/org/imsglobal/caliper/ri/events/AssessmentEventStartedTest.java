@@ -78,8 +78,6 @@ public class AssessmentEventStartedTest {
         object = Assessment.builder()
             .id(BASE_URN.concat("c050e852-5edb-4743-92d1-b53466de3a5f"))
             .name(APP_NAME)
-            .dateToStartOn(new DateTime(2016, 11, 14, 5, 0, 0, 0, DateTimeZone.UTC))
-            .dateToSubmit(new DateTime(2016, 11, 18, 11, 59, 59, 0, DateTimeZone.UTC))
             .maxAttempts(1)
             .maxSubmits(1)
             .maxScore(25.0)
@@ -95,7 +93,7 @@ public class AssessmentEventStartedTest {
             .startedAtTime(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
             .build();
 
-        edApp = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).version("v2").build();
+        edApp = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).coercedToId(true).build();
 
         membership = Membership.builder()
             .id(actor.getId())
