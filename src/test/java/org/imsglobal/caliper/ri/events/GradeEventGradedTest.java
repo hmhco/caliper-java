@@ -78,7 +78,7 @@ public class GradeEventGradedTest {
         object = Attempt.builder()
             .id(BASE_URN.concat("c35603f7a3434e2cb74ef14d60e70f42"))
             .assignable(assignable)
-            .assignee(Person.builder().id(BASE_URN.concat("0f4fedbe-2227-415f-8553-40731a627171")).coercedToId(true).build())
+            .assignee(Person.builder().id(actor.getId()).coercedToId(true).build())
             .count(35)
             .dateCreated(new DateTime(2016, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
             .startedAtTime(new DateTime(2016, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
