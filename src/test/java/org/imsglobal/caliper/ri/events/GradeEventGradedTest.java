@@ -18,10 +18,7 @@
 
 package org.imsglobal.caliper.ri.events;
 
-import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.context.JsonldContext;
@@ -46,6 +43,17 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
+import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
+import static org.imsglobal.caliper.ri.events.HMHConstants.ACTIVITY_REF_ID;
+import static org.imsglobal.caliper.ri.events.HMHConstants.APP_NAME;
+import static org.imsglobal.caliper.ri.events.HMHConstants.BASE_IRI;
+import static org.imsglobal.caliper.ri.events.HMHConstants.BASE_URN;
+import static org.imsglobal.caliper.ri.events.HMHConstants.DISTRICT_REF_ID;
+import static org.imsglobal.caliper.ri.events.HMHConstants.OBJECT_ID;
+import static org.imsglobal.caliper.ri.events.HMHConstants.SCHOOL_REF_ID;
+import static org.imsglobal.caliper.ri.events.HMHConstants.STUDENT_NAME;
+import static org.imsglobal.caliper.ri.events.HMHConstants.STUDENT_USER_REF_ID;
+
 @Category(org.imsglobal.caliper.UnitTest.class)
 public class GradeEventGradedTest {
     private JsonldContext context;
@@ -58,11 +66,6 @@ public class GradeEventGradedTest {
     private Membership membership;
     private GradeEvent event;
 
-    private static final String BASE_URN = "urn:uuid:";
-    private static final String BASE_IRI = "https://www.hmhco.com/";
-    private static final String APP_NAME = "ReadingInventory";
-
-
     @Before
     public void setUp() throws Exception {
         context = JsonldStringContext.getDefault();
@@ -70,13 +73,13 @@ public class GradeEventGradedTest {
         id = "urn:uuid:a50ca17f-5971-47bb-8fca-4e6e6879001d";
 
         //actor = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).version("v2").build();
-        actor = Person.builder().id(BASE_URN.concat("0f4fedbe-2227-415f-8553-40731a627171"))
-                    .name("Casandra Rath").build();
-        
-        assignable = Assessment.builder().id(BASE_URN.concat("c050e852-5edb-4743-92d1-b53466de3a5f")).build();
+        actor = Person.builder().id(BASE_URN.concat(STUDENT_USER_REF_ID)).name(STUDENT_NAME).build();
+        assignable = Assessment.builder().id(BASE_URN.concat(ACTIVITY_REF_ID)).build();
+
+
 
         object = Attempt.builder()
-            .id(BASE_URN.concat("c35603f7a3434e2cb74ef14d60e70f42"))
+            .id(BASE_URN.concat(OBJECT_ID))
             .assignable(assignable)
             .assignee(Person.builder().id(actor.getId()).coercedToId(true).build())
             .count(35)
@@ -86,12 +89,12 @@ public class GradeEventGradedTest {
             .build();
 
         generated = Score.builder()
-            .id(BASE_URN.concat("c050e852-5edb-4743-92d1-b53466de3a5f"))
+            .id(BASE_URN.concat(ACTIVITY_REF_ID))
             .attempt(Attempt.builder().id(object.getId()).coercedToId(true).build())
             .maxScore(1700)
             .scoreGiven(800)
             .scoredBy(SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).coercedToId(true).build())
-            .comment("The lexile score from Test Quiz # c35603f7a3434e2cb74ef14d60e70f42 taken on date/time for student 0f4fedbe-2227-415f-8553-40731a627171")
+            .comment("The lexile score from Test Quiz # "+OBJECT_ID+" taken on date/time for student " + STUDENT_USER_REF_ID)
             .dateCreated(new DateTime(2016, 11, 15, 10, 56, 0, 0, DateTimeZone.UTC))
             .build();
 
@@ -99,15 +102,15 @@ public class GradeEventGradedTest {
 
         membership = Membership.builder()
                 .id(actor.getId())
-                .organization(Organization.builder().id(BASE_URN.concat("ab570d90-3791-4048-a5ee-759657ddccef")).type(EntityType.ORGANIZATION)
-                    .subOrganizationOf(Organization.builder().id(BASE_URN.concat("ea827de8-0ce9-4fe4-a28c-eb388bd9eb92")).type(EntityType.ORGANIZATION)
+                .organization(Organization.builder().id(BASE_URN.concat(SCHOOL_REF_ID)).type(EntityType.ORGANIZATION)
+                    .subOrganizationOf(Organization.builder().id(BASE_URN.concat(DISTRICT_REF_ID)).type(EntityType.ORGANIZATION)
                             .build())
                     .build())
                 .status(Status.ACTIVE)
                 .role(Role.LEARNER)
                 .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
                 .build();
-        
+
         // Build Outcome Event
         event = buildEvent(Action.GRADED);
     }

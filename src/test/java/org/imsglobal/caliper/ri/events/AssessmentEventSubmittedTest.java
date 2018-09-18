@@ -50,12 +50,11 @@ import static org.imsglobal.caliper.ri.events.HMHConstants.ACTIVITY_REF_ID;
 import static org.imsglobal.caliper.ri.events.HMHConstants.APP_NAME;
 import static org.imsglobal.caliper.ri.events.HMHConstants.BASE_IRI;
 import static org.imsglobal.caliper.ri.events.HMHConstants.BASE_URN;
-import static org.imsglobal.caliper.ri.events.HMHConstants.OBJECT_ID;
 import static org.imsglobal.caliper.ri.events.HMHConstants.STUDENT_NAME;
 import static org.imsglobal.caliper.ri.events.HMHConstants.STUDENT_USER_REF_ID;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class AssessmentEventStartedTest {
+public class AssessmentEventSubmittedTest {
     private JsonldContext context;
     private String id;
     private Person actor;
@@ -71,7 +70,8 @@ public class AssessmentEventStartedTest {
     public void setUp() throws Exception {
         context = JsonldStringContext.getDefault();
 
-        id = BASE_URN + "27734504-068d-4596-861c-2315be33a2a2";
+        String UNIQUE_EVENT_ID = "bd232c3c-d86c-45b6-b2eb-3d7688ceeee5";
+        id = BASE_URN + UNIQUE_EVENT_ID;
 
         actor = Person.builder().id(BASE_URN.concat(STUDENT_USER_REF_ID)).name(STUDENT_NAME).build();
         Person assignee = Person.builder().id(actor.getId()).coercedToId(true).build();
@@ -85,8 +85,9 @@ public class AssessmentEventStartedTest {
             .version("1.0")
             .build();
 
+        String UNIQUE_ATTEMPT_ID = "f22de1be-8c76-4e65-9af7-50aafcb1c470";
         generated = Attempt.builder()
-            .id(BASE_URN.concat(OBJECT_ID))
+            .id(BASE_URN.concat(UNIQUE_ATTEMPT_ID))
             .assignable(Assessment.builder().id(object.getId()).coercedToId(true).build())
             .assignee(assignee)
             .count(1)
@@ -107,7 +108,7 @@ public class AssessmentEventStartedTest {
             .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
-        event = buildEvent(Action.STARTED);
+        event = buildEvent(Action.SUBMITTED);
     }
 
     @Test
@@ -115,7 +116,7 @@ public class AssessmentEventStartedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/hmh-ri/caliperEventAssessmentStarted.json");
+        String fixture = jsonFixture("fixtures/hmh-ri/caliperEventAssessmentSubmitted.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
