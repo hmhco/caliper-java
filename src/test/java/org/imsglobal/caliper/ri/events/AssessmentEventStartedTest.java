@@ -71,8 +71,7 @@ public class AssessmentEventStartedTest {
 
         id = BASE_URN + "27734504-068d-4596-861c-2315be33a2a2";
 
-        actor = Person.builder().id(BASE_URN.concat("0f4fedbe-2227-415f-8553-40731a627171"))
-                .name("Casandra Rath").build();
+        actor = Person.builder().id(BASE_URN.concat("0f4fedbe-2227-415f-8553-40731a627171")).build();
         Person assignee = Person.builder().id(actor.getId()).coercedToId(true).build();
 
         object = Assessment.builder()
@@ -103,7 +102,6 @@ public class AssessmentEventStartedTest {
                 .build())
             .status(Status.ACTIVE)
             .role(Role.LEARNER)
-            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         event = buildEvent(Action.STARTED);

@@ -70,8 +70,7 @@ public class GradeEventGradedTest {
         id = "urn:uuid:a50ca17f-5971-47bb-8fca-4e6e6879001d";
 
         //actor = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).version("v2").build();
-        actor = Person.builder().id(BASE_URN.concat("0f4fedbe-2227-415f-8553-40731a627171"))
-                    .name("Casandra Rath").build();
+        actor = Person.builder().id(BASE_URN.concat("0f4fedbe-2227-415f-8553-40731a627171")).build();
         
         assignable = Assessment.builder().id(BASE_URN.concat("c050e852-5edb-4743-92d1-b53466de3a5f")).build();
 
@@ -105,7 +104,6 @@ public class GradeEventGradedTest {
                     .build())
                 .status(Status.ACTIVE)
                 .role(Role.LEARNER)
-                .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
                 .build();
         
         // Build Outcome Event
