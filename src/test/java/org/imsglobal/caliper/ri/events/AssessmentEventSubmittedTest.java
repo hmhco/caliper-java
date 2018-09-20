@@ -18,7 +18,17 @@
 
 package org.imsglobal.caliper.ri.events;
 
+import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
+import static org.imsglobal.caliper.ri.events.HMHConstants.ACTIVITY_REF_ID;
+import static org.imsglobal.caliper.ri.events.HMHConstants.APP_NAME;
+import static org.imsglobal.caliper.ri.events.HMHConstants.BASE_IRI;
+import static org.imsglobal.caliper.ri.events.HMHConstants.BASE_URN;
+import static org.imsglobal.caliper.ri.events.HMHConstants.DISTRICT_REF_ID;
+import static org.imsglobal.caliper.ri.events.HMHConstants.SCHOOL_REF_ID;
+import static org.imsglobal.caliper.ri.events.HMHConstants.STUDENT_USER_REF_ID;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.context.JsonldContext;
@@ -43,15 +53,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-
-import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
-import static org.imsglobal.caliper.ri.events.HMHConstants.*;
-import static org.imsglobal.caliper.ri.events.HMHConstants.ACTIVITY_REF_ID;
-import static org.imsglobal.caliper.ri.events.HMHConstants.APP_NAME;
-import static org.imsglobal.caliper.ri.events.HMHConstants.BASE_IRI;
-import static org.imsglobal.caliper.ri.events.HMHConstants.BASE_URN;
-import static org.imsglobal.caliper.ri.events.HMHConstants.STUDENT_NAME;
-import static org.imsglobal.caliper.ri.events.HMHConstants.STUDENT_USER_REF_ID;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
 public class AssessmentEventSubmittedTest {
