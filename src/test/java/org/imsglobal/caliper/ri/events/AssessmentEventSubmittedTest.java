@@ -73,7 +73,7 @@ public class AssessmentEventSubmittedTest {
         String UNIQUE_EVENT_ID = "bd232c3c-d86c-45b6-b2eb-3d7688ceeee5";
         id = BASE_URN + UNIQUE_EVENT_ID;
 
-        actor = Person.builder().id(BASE_URN.concat(STUDENT_USER_REF_ID)).name(STUDENT_NAME).build();
+        actor = Person.builder().id(BASE_URN.concat(STUDENT_USER_REF_ID)).build();
         Person assignee = Person.builder().id(actor.getId()).coercedToId(true).build();
 
         object = Assessment.builder()
@@ -105,7 +105,6 @@ public class AssessmentEventSubmittedTest {
                 .build())
             .status(Status.ACTIVE)
             .role(Role.LEARNER)
-            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         event = buildEvent(Action.SUBMITTED);
