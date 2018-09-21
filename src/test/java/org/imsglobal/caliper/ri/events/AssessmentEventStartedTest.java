@@ -26,7 +26,6 @@ import static org.imsglobal.caliper.ri.events.HMHConstants.BASE_URN;
 import static org.imsglobal.caliper.ri.events.HMHConstants.DISTRICT_REF_ID;
 import static org.imsglobal.caliper.ri.events.HMHConstants.SCHOOL_REF_ID;
 import static org.imsglobal.caliper.ri.events.HMHConstants.STUDENT_USER_REF_ID;
-import static org.imsglobal.caliper.ri.events.HMHConstants.MEMBER_ID;
 
 import java.util.UUID;
 
@@ -60,6 +59,7 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 public class AssessmentEventStartedTest {
     private JsonldContext context;
     private String id;
+    private String member_id;
     private Person actor;
     private Assessment object;
     private SoftwareApplication edApp;
@@ -73,6 +73,7 @@ public class AssessmentEventStartedTest {
         context = JsonldStringContext.getDefault();
 
         id = BASE_URN + "27734504-068d-4596-861c-2315be33a2a2";
+        member_id = BASE_URN + "37734504-168d-4596-961c-3315be33a2a2";
 
         actor = Person.builder().id(BASE_URN.concat(STUDENT_USER_REF_ID)).build();
 
@@ -88,7 +89,7 @@ public class AssessmentEventStartedTest {
         edApp = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).coercedToId(true).build();
 
         membership = Membership.builder()
-            .id(BASE_URN.concat(MEMBER_ID))
+            .id(member_id)
             .organization(Organization.builder().id(BASE_URN.concat(SCHOOL_REF_ID)).type(EntityType.ORGANIZATION)
                 .subOrganizationOf(Organization.builder().id(BASE_URN.concat(DISTRICT_REF_ID)).type(EntityType.ORGANIZATION)
                         .build())

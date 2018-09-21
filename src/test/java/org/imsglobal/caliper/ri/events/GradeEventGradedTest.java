@@ -27,6 +27,7 @@ import static org.imsglobal.caliper.ri.events.HMHConstants.DISTRICT_REF_ID;
 import static org.imsglobal.caliper.ri.events.HMHConstants.OBJECT_ID;
 import static org.imsglobal.caliper.ri.events.HMHConstants.SCHOOL_REF_ID;
 import static org.imsglobal.caliper.ri.events.HMHConstants.STUDENT_USER_REF_ID;
+import static org.imsglobal.caliper.ri.events.HMHConstants.LAST_ATTEMPT_ID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -58,6 +59,8 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 public class GradeEventGradedTest {
     private JsonldContext context;
     private String id;
+    private String member_id;
+    private String generated_id;
     private SoftwareApplication edApp;
     private Person actor;
     private Attempt object;
@@ -71,13 +74,15 @@ public class GradeEventGradedTest {
         context = JsonldStringContext.getDefault();
 
         id = "urn:uuid:a50ca17f-5971-47bb-8fca-4e6e6879001d";
+        member_id = "urn:uuid:8f4fedbe-2227-415f-8553-40731a627171";
+        generated_id = "urn:uuid:2050e852-5edb-4743-92d1-b53466de3a5f";
 
         //actor = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).version("v2").build();
         actor = Person.builder().id(BASE_URN.concat(STUDENT_USER_REF_ID)).build();
         assignable = Assessment.builder().id(BASE_URN.concat(ACTIVITY_REF_ID)).build();
 
         object = Attempt.builder()
-            .id(BASE_URN.concat(OBJECT_ID))
+            .id(BASE_URN.concat(LAST_ATTEMPT_ID))
             .assignable(assignable)
             .assignee(Person.builder().id(actor.getId()).coercedToId(true).build())
             .count(35)
@@ -87,8 +92,8 @@ public class GradeEventGradedTest {
             .build();
 
         generated = Score.builder()
-            .id(BASE_URN.concat(ACTIVITY_REF_ID))
-            .attempt(Attempt.builder().id(object.getId()).coercedToId(true).build())
+            .id(generated_id)
+            .attempt(Attempt.builder().id(BASE_URN.concat(LAST_ATTEMPT_ID)).coercedToId(true).build())
             .maxScore(1700)
             .scoreGiven(800)
             .scoredBy(SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).coercedToId(true).build())
@@ -99,7 +104,7 @@ public class GradeEventGradedTest {
         edApp = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).coercedToId(true).build();
 
         membership = Membership.builder()
-                .id(actor.getId())
+                .id(member_id)
                 .organization(Organization.builder().id(BASE_URN.concat(SCHOOL_REF_ID)).type(EntityType.ORGANIZATION)
                     .subOrganizationOf(Organization.builder().id(BASE_URN.concat(DISTRICT_REF_ID)).type(EntityType.ORGANIZATION)
                             .build())
