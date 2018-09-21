@@ -11,4 +11,5 @@ public class HMHConstants {
     public static final String DISTRICT_REF_ID = "ea827de8-0ce9-4fe4-a28c-eb388bd9eb92";
 
     public static final String OBJECT_ID = "c35603f7a3434e2cb74ef14d60e70f42";
+    public static final String MEMBER_ID = "37734504-168d-4596-961c-3315be33a2a2";
 }

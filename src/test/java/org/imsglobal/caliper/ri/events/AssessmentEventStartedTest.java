@@ -24,9 +24,11 @@ import static org.imsglobal.caliper.ri.events.HMHConstants.APP_NAME;
 import static org.imsglobal.caliper.ri.events.HMHConstants.BASE_IRI;
 import static org.imsglobal.caliper.ri.events.HMHConstants.BASE_URN;
 import static org.imsglobal.caliper.ri.events.HMHConstants.DISTRICT_REF_ID;
-import static org.imsglobal.caliper.ri.events.HMHConstants.OBJECT_ID;
 import static org.imsglobal.caliper.ri.events.HMHConstants.SCHOOL_REF_ID;
 import static org.imsglobal.caliper.ri.events.HMHConstants.STUDENT_USER_REF_ID;
+import static org.imsglobal.caliper.ri.events.HMHConstants.MEMBER_ID;
+
+import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -43,7 +45,6 @@ import org.imsglobal.caliper.entities.agent.Role;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
 import org.imsglobal.caliper.entities.agent.Status;
 import org.imsglobal.caliper.entities.resource.Assessment;
-import org.imsglobal.caliper.entities.resource.Attempt;
 import org.imsglobal.caliper.entities.session.Session;
 import org.imsglobal.caliper.events.AssessmentEvent;
 import org.joda.time.DateTime;
@@ -61,7 +62,6 @@ public class AssessmentEventStartedTest {
     private String id;
     private Person actor;
     private Assessment object;
-    private Attempt generated;
     private SoftwareApplication edApp;
     private CourseSection group;
     private Membership membership;
@@ -75,7 +75,6 @@ public class AssessmentEventStartedTest {
         id = BASE_URN + "27734504-068d-4596-861c-2315be33a2a2";
 
         actor = Person.builder().id(BASE_URN.concat(STUDENT_USER_REF_ID)).build();
-        Person assignee = Person.builder().id(actor.getId()).coercedToId(true).build();
 
         object = Assessment.builder()
             .id(BASE_URN.concat(ACTIVITY_REF_ID))
@@ -86,19 +85,10 @@ public class AssessmentEventStartedTest {
             .version("1.0")
             .build();
 
-        generated = Attempt.builder()
-            .id(BASE_URN.concat(OBJECT_ID))
-            .assignable(Assessment.builder().id(object.getId()).coercedToId(true).build())
-            .assignee(assignee)
-            .count(1)
-            .dateCreated(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
-            .startedAtTime(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
-            .build();
-
         edApp = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).coercedToId(true).build();
 
         membership = Membership.builder()
-            .id(actor.getId())
+            .id(BASE_URN.concat(MEMBER_ID))
             .organization(Organization.builder().id(BASE_URN.concat(SCHOOL_REF_ID)).type(EntityType.ORGANIZATION)
                 .subOrganizationOf(Organization.builder().id(BASE_URN.concat(DISTRICT_REF_ID)).type(EntityType.ORGANIZATION)
                         .build())
@@ -141,7 +131,6 @@ public class AssessmentEventStartedTest {
             .actor(actor)
             .action(action)
             .object(object)
-            .generated(generated)
             .eventTime(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
             .edApp(edApp)
             .group(group)
