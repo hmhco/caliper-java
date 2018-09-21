@@ -18,7 +18,17 @@
 
 package org.imsglobal.caliper.ri.events;
 
+import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
+import static org.imsglobal.caliper.ri.events.HMHConstants.ACTIVITY_REF_ID;
+import static org.imsglobal.caliper.ri.events.HMHConstants.APP_NAME;
+import static org.imsglobal.caliper.ri.events.HMHConstants.BASE_IRI;
+import static org.imsglobal.caliper.ri.events.HMHConstants.BASE_URN;
+import static org.imsglobal.caliper.ri.events.HMHConstants.DISTRICT_REF_ID;
+import static org.imsglobal.caliper.ri.events.HMHConstants.SCHOOL_REF_ID;
+import static org.imsglobal.caliper.ri.events.HMHConstants.STUDENT_USER_REF_ID;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.context.JsonldContext;
@@ -44,15 +54,6 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
-import static org.imsglobal.caliper.ri.events.HMHConstants.*;
-import static org.imsglobal.caliper.ri.events.HMHConstants.ACTIVITY_REF_ID;
-import static org.imsglobal.caliper.ri.events.HMHConstants.APP_NAME;
-import static org.imsglobal.caliper.ri.events.HMHConstants.BASE_IRI;
-import static org.imsglobal.caliper.ri.events.HMHConstants.BASE_URN;
-import static org.imsglobal.caliper.ri.events.HMHConstants.STUDENT_NAME;
-import static org.imsglobal.caliper.ri.events.HMHConstants.STUDENT_USER_REF_ID;
-
 @Category(org.imsglobal.caliper.UnitTest.class)
 public class AssessmentEventSubmittedTest {
     private JsonldContext context;
@@ -73,7 +74,7 @@ public class AssessmentEventSubmittedTest {
         String UNIQUE_EVENT_ID = "bd232c3c-d86c-45b6-b2eb-3d7688ceeee5";
         id = BASE_URN + UNIQUE_EVENT_ID;
 
-        actor = Person.builder().id(BASE_URN.concat(STUDENT_USER_REF_ID)).name(STUDENT_NAME).build();
+        actor = Person.builder().id(BASE_URN.concat(STUDENT_USER_REF_ID)).build();
         Person assignee = Person.builder().id(actor.getId()).coercedToId(true).build();
 
         object = Assessment.builder()
@@ -105,7 +106,6 @@ public class AssessmentEventSubmittedTest {
                 .build())
             .status(Status.ACTIVE)
             .role(Role.LEARNER)
-            .dateCreated(new DateTime(2016, 8, 1, 6, 0, 0, 0, DateTimeZone.UTC))
             .build();
 
         event = buildEvent(Action.SUBMITTED);
