@@ -1,6 +1,6 @@
 package org.imsglobal.caliper.partner.events;
 
-import org.imsglobal.caliper.ri.events.HMHConstants;
+import org.imsglobal.caliper.events.HMHConstants;
 
 public class RenLearnConstants extends HMHConstants{
 
