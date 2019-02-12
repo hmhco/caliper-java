@@ -16,21 +16,9 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.partner.events;
-
-import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
-import static org.imsglobal.caliper.partner.events.RenLearnConstants.ACTIVITY_REF_ID;
-import static org.imsglobal.caliper.partner.events.RenLearnConstants.APP_REN_LEAN_NAME;
-import static org.imsglobal.caliper.partner.events.RenLearnConstants.BASE_IRI;
-import static org.imsglobal.caliper.partner.events.RenLearnConstants.BASE_URN;
-import static org.imsglobal.caliper.partner.events.RenLearnConstants.DISTRICT_REF_ID;
-import static org.imsglobal.caliper.partner.events.RenLearnConstants.OBJECT_ID;
-import static org.imsglobal.caliper.partner.events.RenLearnConstants.SCHOOL_REF_ID;
-import static org.imsglobal.caliper.partner.events.RenLearnConstants.STUDENT_USER_REF_ID;
-import static org.imsglobal.caliper.partner.events.RenLearnConstants.LAST_ATTEMPT_ID;
+package org.imsglobal.caliper.partner.events.development;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.context.JsonldContext;
@@ -54,6 +42,17 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
+
+import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
+import static org.imsglobal.caliper.partner.events.RenLearnConstants.ACTIVITY_REF_ID;
+import static org.imsglobal.caliper.partner.events.RenLearnConstants.APP_REN_LEAN_NAME;
+import static org.imsglobal.caliper.partner.events.RenLearnConstants.BASE_IRI;
+import static org.imsglobal.caliper.partner.events.RenLearnConstants.BASE_URN;
+import static org.imsglobal.caliper.partner.events.RenLearnConstants.DISTRICT_REF_ID;
+import static org.imsglobal.caliper.partner.events.RenLearnConstants.LAST_ATTEMPT_ID;
+import static org.imsglobal.caliper.partner.events.RenLearnConstants.OBJECT_ID;
+import static org.imsglobal.caliper.partner.events.RenLearnConstants.SCHOOL_REF_ID;
+import static org.imsglobal.caliper.partner.events.RenLearnConstants.STUDENT_USER_REF_ID;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
 public class RenLearnStarScoreEventGradedTest {
@@ -124,7 +123,7 @@ public class RenLearnStarScoreEventGradedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/hmh-renlearn/caliperEventStarScoreGraded.json");
+        String fixture = jsonFixture("fixtures/hmh/hmh-renlearn/development/caliperEventStarScoreGraded.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

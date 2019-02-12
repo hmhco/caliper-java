@@ -16,20 +16,9 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.ri.events;
-
-import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
+package org.imsglobal.caliper.ri.events.released;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import static org.imsglobal.caliper.events.HMHConstants.ACTIVITY_REF_ID;
-import static org.imsglobal.caliper.events.HMHConstants.BASE_IRI;
-import static org.imsglobal.caliper.events.HMHConstants.BASE_URN;
-import static org.imsglobal.caliper.events.HMHConstants.DISTRICT_REF_ID;
-import static org.imsglobal.caliper.events.HMHConstants.SCHOOL_REF_ID;
-import static org.imsglobal.caliper.events.HMHConstants.STUDENT_USER_REF_ID;
-import static org.imsglobal.caliper.ri.events.RIConstants.APP_NAME;
-
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.context.JsonldContext;
@@ -43,7 +32,6 @@ import org.imsglobal.caliper.entities.agent.Role;
 import org.imsglobal.caliper.entities.agent.SoftwareApplication;
 import org.imsglobal.caliper.entities.agent.Status;
 import org.imsglobal.caliper.entities.resource.Assessment;
-import org.imsglobal.caliper.entities.resource.Attempt;
 import org.imsglobal.caliper.entities.session.Session;
 import org.imsglobal.caliper.events.AssessmentEvent;
 import org.joda.time.DateTime;
@@ -55,13 +43,23 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
+import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
+import static org.imsglobal.caliper.events.HMHConstants.ACTIVITY_REF_ID;
+import static org.imsglobal.caliper.events.HMHConstants.BASE_IRI;
+import static org.imsglobal.caliper.events.HMHConstants.BASE_URN;
+import static org.imsglobal.caliper.events.HMHConstants.DISTRICT_REF_ID;
+import static org.imsglobal.caliper.events.HMHConstants.SCHOOL_REF_ID;
+import static org.imsglobal.caliper.events.HMHConstants.STUDENT_USER_REF_ID;
+import static org.imsglobal.caliper.ri.events.RIConstants.APP_NAME;
+import static org.imsglobal.caliper.ri.events.RIConstants.RIMI_RELEASED_DIRECTORY;
+
 @Category(org.imsglobal.caliper.UnitTest.class)
-public class AssessmentEventSubmittedTest {
+public class AssessmentEventStartedTest {
     private JsonldContext context;
     private String id;
+    private String member_id;
     private Person actor;
     private Assessment object;
-    private Attempt generated;
     private SoftwareApplication edApp;
     private CourseSection group;
     private Membership membership;
@@ -72,11 +70,10 @@ public class AssessmentEventSubmittedTest {
     public void setUp() throws Exception {
         context = JsonldStringContext.getDefault();
 
-        String UNIQUE_EVENT_ID = "bd232c3c-d86c-45b6-b2eb-3d7688ceeee5";
-        id = BASE_URN + UNIQUE_EVENT_ID;
+        id = BASE_URN + "27734504-068d-4596-861c-2315be33a2a2";
+        member_id = BASE_URN + "randomGuidId";
 
         actor = Person.builder().id(BASE_URN.concat(STUDENT_USER_REF_ID)).build();
-        Person assignee = Person.builder().id(actor.getId()).coercedToId(true).build();
 
         object = Assessment.builder()
             .id(BASE_URN.concat(ACTIVITY_REF_ID))
@@ -87,20 +84,10 @@ public class AssessmentEventSubmittedTest {
             .version("1.0")
             .build();
 
-        String UNIQUE_ATTEMPT_ID = "f22de1be-8c76-4e65-9af7-50aafcb1c470";
-        generated = Attempt.builder()
-            .id(BASE_URN.concat(UNIQUE_ATTEMPT_ID))
-            .assignable(Assessment.builder().id(object.getId()).coercedToId(true).build())
-            .assignee(assignee)
-            .count(1)
-            .dateCreated(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
-            .startedAtTime(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
-            .build();
-
         edApp = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).coercedToId(true).build();
 
         membership = Membership.builder()
-            .id(actor.getId())
+            .id(member_id)
             .organization(Organization.builder().id(BASE_URN.concat(SCHOOL_REF_ID)).type(EntityType.ORGANIZATION)
                 .subOrganizationOf(Organization.builder().id(BASE_URN.concat(DISTRICT_REF_ID)).type(EntityType.ORGANIZATION)
                         .build())
@@ -109,7 +96,7 @@ public class AssessmentEventSubmittedTest {
             .role(Role.LEARNER)
             .build();
 
-        event = buildEvent(Action.SUBMITTED);
+        event = buildEvent(Action.STARTED);
     }
 
     @Test
@@ -117,7 +104,7 @@ public class AssessmentEventSubmittedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/hmh-ri/caliperEventAssessmentSubmitted.json");
+        String fixture = jsonFixture(RIMI_RELEASED_DIRECTORY+"caliperEventAssessmentStarted.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
@@ -143,7 +130,6 @@ public class AssessmentEventSubmittedTest {
             .actor(actor)
             .action(action)
             .object(object)
-            .generated(generated)
             .eventTime(new DateTime(2016, 11, 15, 10, 15, 0, 0, DateTimeZone.UTC))
             .edApp(edApp)
             .group(group)
