@@ -16,7 +16,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.assessmentService.events;
+package org.imsglobal.caliper.assessmentService.events.development;
 
 import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
 import static org.imsglobal.caliper.events.HMHConstants.ACTIVITY_REF_ID;
@@ -121,7 +121,7 @@ public class CaliperEventSpanishRiGradedTest {
     public void caliperEventSerializesToJSON() throws Exception {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
-        String fixture = jsonFixture("fixtures/hmh-assessment-service/caliperEventSpanishRiGraded.json");
+        String fixture = jsonFixture("fixtures/hmh/hmh-assessment-service/development/caliperEventSpanishRiGraded.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
