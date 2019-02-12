@@ -16,22 +16,9 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.imsglobal.caliper.ri.events;
-
-import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
+package org.imsglobal.caliper.ri.events.released;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import static org.imsglobal.caliper.events.HMHConstants.ACTIVITY_REF_ID;
-import static org.imsglobal.caliper.events.HMHConstants.BASE_IRI;
-import static org.imsglobal.caliper.events.HMHConstants.BASE_URN;
-import static org.imsglobal.caliper.events.HMHConstants.DISTRICT_REF_ID;
-import static org.imsglobal.caliper.events.HMHConstants.LAST_ATTEMPT_ID;
-import static org.imsglobal.caliper.events.HMHConstants.OBJECT_ID;
-import static org.imsglobal.caliper.events.HMHConstants.SCHOOL_REF_ID;
-import static org.imsglobal.caliper.events.HMHConstants.STUDENT_USER_REF_ID;
-import static org.imsglobal.caliper.ri.events.RIConstants.APP_NAME;
-
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.context.JsonldContext;
@@ -56,6 +43,18 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
+import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
+import static org.imsglobal.caliper.events.HMHConstants.ACTIVITY_REF_ID;
+import static org.imsglobal.caliper.events.HMHConstants.BASE_IRI;
+import static org.imsglobal.caliper.events.HMHConstants.BASE_URN;
+import static org.imsglobal.caliper.events.HMHConstants.DISTRICT_REF_ID;
+import static org.imsglobal.caliper.events.HMHConstants.LAST_ATTEMPT_ID;
+import static org.imsglobal.caliper.events.HMHConstants.OBJECT_ID;
+import static org.imsglobal.caliper.events.HMHConstants.SCHOOL_REF_ID;
+import static org.imsglobal.caliper.events.HMHConstants.STUDENT_USER_REF_ID;
+import static org.imsglobal.caliper.ri.events.RIConstants.APP_NAME;
+import static org.imsglobal.caliper.ri.events.RIConstants.RIMI_DEVELOPMENT_DIRECTORY;
+
 @Category(org.imsglobal.caliper.UnitTest.class)
 public class GradeEventGradedTest {
     private JsonldContext context;
@@ -75,7 +74,7 @@ public class GradeEventGradedTest {
         context = JsonldStringContext.getDefault();
 
         id = "urn:uuid:a50ca17f-5971-47bb-8fca-4e6e6879001d";
-        member_id = "urn:uuid:8f4fedbe-2227-415f-8553-40731a627171";
+        member_id = "urn:uuid:randomGuidId";
         generated_id = "urn:uuid:2050e852-5edb-4743-92d1-b53466de3a5f";
 
         //actor = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).version("v2").build();
@@ -123,7 +122,7 @@ public class GradeEventGradedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/hmh-ri/caliperEventGradeGraded.json");
+        String fixture = jsonFixture(RIMI_DEVELOPMENT_DIRECTORY+"caliperEventGradeGraded.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
