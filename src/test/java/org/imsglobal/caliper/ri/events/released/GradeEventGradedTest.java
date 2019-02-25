@@ -19,6 +19,8 @@
 package org.imsglobal.caliper.ri.events.released;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.context.JsonldContext;
@@ -36,6 +38,7 @@ import org.imsglobal.caliper.entities.resource.Attempt;
 import org.imsglobal.caliper.events.GradeEvent;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.Period;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,6 +57,8 @@ import static org.imsglobal.caliper.events.HMHConstants.SCHOOL_REF_ID;
 import static org.imsglobal.caliper.events.HMHConstants.STUDENT_USER_REF_ID;
 import static org.imsglobal.caliper.ri.events.RIConstants.APP_NAME;
 import static org.imsglobal.caliper.ri.events.RIConstants.RIMI_DEVELOPMENT_DIRECTORY;
+
+import java.util.Calendar;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
 public class GradeEventGradedTest {
@@ -89,6 +94,7 @@ public class GradeEventGradedTest {
             .dateCreated(new DateTime(2016, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
             .startedAtTime(new DateTime(2016, 11, 15, 10, 5, 0, 0, DateTimeZone.UTC))
             .endedAtTime(new DateTime(2016, 11, 15, 10, 55, 12, 0, DateTimeZone.UTC))
+            .duration(Period.seconds(1200).toString())
             .build();
 
         generated = Score.builder()
