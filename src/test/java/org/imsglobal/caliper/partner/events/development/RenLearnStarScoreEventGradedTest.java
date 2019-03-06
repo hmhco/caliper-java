@@ -61,6 +61,7 @@ public class RenLearnStarScoreEventGradedTest {
     private String member_id;
     private String score_id;
     private String score_name;
+    private String test_name;
     private SoftwareApplication edApp;
     private Person actor;
     private Attempt object;
@@ -77,6 +78,7 @@ public class RenLearnStarScoreEventGradedTest {
         member_id = "urn:uuid:8f4fedbe-2227-415f-8553-40731a627171";
         score_id = "urn:uuid:2050e852-5edb-4743-92d1-b53466de3a5f";
         score_name = "star";
+        test_name = "Star Reading Enterprise Tests";
 
         actor = Person.builder().id(BASE_URN.concat(STUDENT_USER_REF_ID)).build();
         assignable = Assessment.builder().id(BASE_URN.concat(ACTIVITY_REF_ID)).build();
@@ -97,6 +99,7 @@ public class RenLearnStarScoreEventGradedTest {
             .maxScore(1400)
             .scoreGiven(500)
             .name(score_name)
+            .description(test_name)
             .scoredBy(SoftwareApplication.builder().id(BASE_IRI.concat(APP_REN_LEAN_NAME)).coercedToId(true).build())
             .comment("The Assessment score from RenLearn # "+OBJECT_ID+" taken on date/time for student " + STUDENT_USER_REF_ID)
             .dateCreated(new DateTime(2016, 11, 15, 10, 56, 0, 0, DateTimeZone.UTC))
