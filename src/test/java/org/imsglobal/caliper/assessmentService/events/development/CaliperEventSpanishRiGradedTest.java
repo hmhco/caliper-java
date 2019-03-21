@@ -18,18 +18,7 @@
 
 package org.imsglobal.caliper.assessmentService.events.development;
 
-import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
-import static org.imsglobal.caliper.events.HMHConstants.ACTIVITY_REF_ID;
-import static org.imsglobal.caliper.events.HMHConstants.BASE_IRI;
-import static org.imsglobal.caliper.events.HMHConstants.BASE_URN;
-import static org.imsglobal.caliper.events.HMHConstants.DISTRICT_REF_ID;
-import static org.imsglobal.caliper.events.HMHConstants.OBJECT_ID;
-import static org.imsglobal.caliper.events.HMHConstants.SCHOOL_REF_ID;
-import static org.imsglobal.caliper.events.HMHConstants.STUDENT_USER_REF_ID;
-import static org.imsglobal.caliper.events.HMHConstants.LAST_ATTEMPT_ID;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.context.JsonldContext;
@@ -53,6 +42,16 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
+
+import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
+import static org.imsglobal.caliper.events.HMHConstants.ACTIVITY_REF_ID;
+import static org.imsglobal.caliper.events.HMHConstants.BASE_IRI;
+import static org.imsglobal.caliper.events.HMHConstants.BASE_URN;
+import static org.imsglobal.caliper.events.HMHConstants.DISTRICT_REF_ID;
+import static org.imsglobal.caliper.events.HMHConstants.LAST_ATTEMPT_ID;
+import static org.imsglobal.caliper.events.HMHConstants.OBJECT_ID;
+import static org.imsglobal.caliper.events.HMHConstants.SCHOOL_REF_ID;
+import static org.imsglobal.caliper.events.HMHConstants.STUDENT_USER_REF_ID;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
 public class CaliperEventSpanishRiGradedTest {
@@ -121,7 +120,7 @@ public class CaliperEventSpanishRiGradedTest {
     public void caliperEventSerializesToJSON() throws Exception {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
-        String fixture = jsonFixture("fixtures/hmh/hmh-assessment-service/development/caliperEventSpanishRiGraded.json");
+        String fixture = jsonFixture("fixtures/hmh/hmh-assessment-service/released/caliperEventSpanishRiGraded.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

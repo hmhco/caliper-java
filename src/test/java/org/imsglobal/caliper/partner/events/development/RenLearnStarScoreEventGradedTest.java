@@ -126,7 +126,7 @@ public class RenLearnStarScoreEventGradedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture("fixtures/hmh/hmh-renlearn/development/caliperEventStarScoreGraded.json");
+        String fixture = jsonFixture("fixtures/hmh/hmh-renlearn/released/caliperEventStarScoreGraded.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 

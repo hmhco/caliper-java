@@ -19,8 +19,6 @@
 package org.imsglobal.caliper.ri.events.released;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.context.JsonldContext;
@@ -56,9 +54,7 @@ import static org.imsglobal.caliper.events.HMHConstants.OBJECT_ID;
 import static org.imsglobal.caliper.events.HMHConstants.SCHOOL_REF_ID;
 import static org.imsglobal.caliper.events.HMHConstants.STUDENT_USER_REF_ID;
 import static org.imsglobal.caliper.ri.events.RIConstants.APP_NAME;
-import static org.imsglobal.caliper.ri.events.RIConstants.RIMI_DEVELOPMENT_DIRECTORY;
-
-import java.util.Calendar;
+import static org.imsglobal.caliper.ri.events.RIConstants.RIMI_RELEASED_DIRECTORY;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
 public class GradeEventGradedTest {
@@ -128,7 +124,7 @@ public class GradeEventGradedTest {
         ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
         String json = mapper.writeValueAsString(event);
 
-        String fixture = jsonFixture(RIMI_DEVELOPMENT_DIRECTORY+"caliperEventGradeGraded.json");
+        String fixture = jsonFixture(RIMI_RELEASED_DIRECTORY+"caliperEventGradeGraded.json");
         JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
     }
 
