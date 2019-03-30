@@ -28,6 +28,10 @@ import static org.imsglobal.caliper.events.HMHConstants.SCHOOL_REF_ID;
 import static org.imsglobal.caliper.events.HMHConstants.STUDENT_USER_REF_ID;
 import static org.imsglobal.caliper.ri.events.RIConstants.APP_NAME;
 import static org.imsglobal.caliper.ri.events.RIConstants.RIMI_RELEASED_DIRECTORY;
+import static org.imsglobal.caliper.ri.events.RIConstants.APP_CODE;
+import static org.imsglobal.caliper.ri.events.RIConstants.APP_CODE_KEY;
+import static org.imsglobal.caliper.ri.events.RIConstants.DISCIPLINE_CODE;
+import static org.imsglobal.caliper.ri.events.RIConstants.DISCIPLINE_CODE_KEY;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -90,8 +94,8 @@ public class AssessmentEventStartedTest {
             .build();
 
         Map<String,Object> edAppExtensions = new HashMap<String,Object>();
-        edAppExtensions.put("applicationCode", "RI");
-        edAppExtensions.put("disciplineCode", "ED18_RLA");
+        edAppExtensions.put(APP_CODE_KEY, APP_CODE);
+        edAppExtensions.put(DISCIPLINE_CODE_KEY, DISCIPLINE_CODE);
         
         edApp = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME))
                 .type(EntityType.SOFTWARE_APPLICATION)
