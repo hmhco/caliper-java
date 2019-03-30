@@ -18,7 +18,22 @@
 
 package org.imsglobal.caliper.ri.events.released;
 
+import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
+import static org.imsglobal.caliper.events.HMHConstants.ACTIVITY_REF_ID;
+import static org.imsglobal.caliper.events.HMHConstants.BASE_IRI;
+import static org.imsglobal.caliper.events.HMHConstants.BASE_URN;
+import static org.imsglobal.caliper.events.HMHConstants.COURSE_SECTION_ID;
+import static org.imsglobal.caliper.events.HMHConstants.DISTRICT_REF_ID;
+import static org.imsglobal.caliper.events.HMHConstants.SCHOOL_REF_ID;
+import static org.imsglobal.caliper.events.HMHConstants.STUDENT_USER_REF_ID;
+import static org.imsglobal.caliper.ri.events.RIConstants.APP_NAME;
+import static org.imsglobal.caliper.ri.events.RIConstants.RIMI_RELEASED_DIRECTORY;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.imsglobal.caliper.TestUtils;
 import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.context.JsonldContext;
@@ -42,16 +57,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-
-import static com.yammer.dropwizard.testing.JsonHelpers.jsonFixture;
-import static org.imsglobal.caliper.events.HMHConstants.ACTIVITY_REF_ID;
-import static org.imsglobal.caliper.events.HMHConstants.BASE_IRI;
-import static org.imsglobal.caliper.events.HMHConstants.BASE_URN;
-import static org.imsglobal.caliper.events.HMHConstants.DISTRICT_REF_ID;
-import static org.imsglobal.caliper.events.HMHConstants.SCHOOL_REF_ID;
-import static org.imsglobal.caliper.events.HMHConstants.STUDENT_USER_REF_ID;
-import static org.imsglobal.caliper.ri.events.RIConstants.APP_NAME;
-import static org.imsglobal.caliper.ri.events.RIConstants.RIMI_RELEASED_DIRECTORY;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
 public class AssessmentEventStartedTest {
@@ -84,14 +89,22 @@ public class AssessmentEventStartedTest {
             .version("1.0")
             .build();
 
-        edApp = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).coercedToId(true).build();
+        Map<String,Object> edAppExtensions = new HashMap<String,Object>();
+        edAppExtensions.put("applicationCode", "RI");
+        edAppExtensions.put("disciplineCode", "ED18_RLA");
+        
+        edApp = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME))
+                .type(EntityType.SOFTWARE_APPLICATION)
+                    .extensions(edAppExtensions)
+                    .build();
 
         membership = Membership.builder()
             .id(member_id)
-            .organization(Organization.builder().id(BASE_URN.concat(SCHOOL_REF_ID)).type(EntityType.ORGANIZATION)
-                .subOrganizationOf(Organization.builder().id(BASE_URN.concat(DISTRICT_REF_ID)).type(EntityType.ORGANIZATION)
-                        .build())
-                .build())
+            .organization(CourseSection.builder().id(BASE_URN.concat(COURSE_SECTION_ID)).type(EntityType.COURSE_SECTION).academicSession("BOY 2019")
+                    .subOrganizationOf(Organization.builder().id(BASE_URN.concat(SCHOOL_REF_ID)).type(EntityType.ORGANIZATION)
+                            .subOrganizationOf(Organization.builder().id(BASE_URN.concat(DISTRICT_REF_ID)).type(EntityType.ORGANIZATION).build())
+                            .build())
+                    .build())
             .status(Status.ACTIVE)
             .role(Role.LEARNER)
             .build();

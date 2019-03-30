@@ -24,6 +24,7 @@ import org.imsglobal.caliper.actions.Action;
 import org.imsglobal.caliper.context.JsonldContext;
 import org.imsglobal.caliper.context.JsonldStringContext;
 import org.imsglobal.caliper.entities.EntityType;
+import org.imsglobal.caliper.entities.agent.CourseSection;
 import org.imsglobal.caliper.entities.agent.Membership;
 import org.imsglobal.caliper.entities.agent.Organization;
 import org.imsglobal.caliper.entities.agent.Person;
@@ -49,12 +50,16 @@ import static org.imsglobal.caliper.events.HMHConstants.ACTIVITY_REF_ID;
 import static org.imsglobal.caliper.events.HMHConstants.BASE_IRI;
 import static org.imsglobal.caliper.events.HMHConstants.BASE_URN;
 import static org.imsglobal.caliper.events.HMHConstants.DISTRICT_REF_ID;
+import static org.imsglobal.caliper.events.HMHConstants.COURSE_SECTION_ID;
 import static org.imsglobal.caliper.events.HMHConstants.LAST_ATTEMPT_ID;
 import static org.imsglobal.caliper.events.HMHConstants.OBJECT_ID;
 import static org.imsglobal.caliper.events.HMHConstants.SCHOOL_REF_ID;
 import static org.imsglobal.caliper.events.HMHConstants.STUDENT_USER_REF_ID;
 import static org.imsglobal.caliper.ri.events.RIConstants.APP_NAME;
 import static org.imsglobal.caliper.ri.events.RIConstants.RIMI_RELEASED_DIRECTORY;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Category(org.imsglobal.caliper.UnitTest.class)
 public class GradeEventGradedTest {
@@ -103,18 +108,26 @@ public class GradeEventGradedTest {
             .dateCreated(new DateTime(2016, 11, 15, 10, 56, 0, 0, DateTimeZone.UTC))
             .build();
 
-        edApp = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME)).coercedToId(true).build();
+        Map<String,Object> edAppExtensions = new HashMap<String,Object>();
+        edAppExtensions.put("applicationCode", "RI");
+        edAppExtensions.put("disciplineCode", "ED18_RLA");
+        
+        edApp = SoftwareApplication.builder().id(BASE_IRI.concat(APP_NAME))
+                .type(EntityType.SOFTWARE_APPLICATION)
+                    .extensions(edAppExtensions)
+                    .build();
 
         membership = Membership.builder()
                 .id(member_id)
-                .organization(Organization.builder().id(BASE_URN.concat(SCHOOL_REF_ID)).type(EntityType.ORGANIZATION)
-                    .subOrganizationOf(Organization.builder().id(BASE_URN.concat(DISTRICT_REF_ID)).type(EntityType.ORGANIZATION)
-                            .build())
-                    .build())
+                .organization(CourseSection.builder().id(BASE_URN.concat(COURSE_SECTION_ID)).type(EntityType.COURSE_SECTION).academicSession("BOY 2019")
+                        .subOrganizationOf(Organization.builder().id(BASE_URN.concat(SCHOOL_REF_ID)).type(EntityType.ORGANIZATION)
+                                .subOrganizationOf(Organization.builder().id(BASE_URN.concat(DISTRICT_REF_ID)).type(EntityType.ORGANIZATION).build())
+                                .build())
+                        .build())
                 .status(Status.ACTIVE)
                 .role(Role.LEARNER)
                 .build();
-
+        
         // Build Outcome Event
         event = buildEvent(Action.GRADED);
     }
