@@ -8,7 +8,6 @@ public class HMHConstants {
     public static final String ACTIVITY_REF_ID = "c050e852-5edb-4743-92d1-b53466de3a5f";
     public static final String SCHOOL_REF_ID = "ab570d90-3791-4048-a5ee-759657ddccef";
     public static final String DISTRICT_REF_ID = "ea827de8-0ce9-4fe4-a28c-eb388bd9eb92";
-    public static final String COURSE_SECTION_ID = "sdfhs76h-2343-a087-34b3-df423kb2zjz8";
 
     public static final String OBJECT_ID = "c35603f7a3434e2cb74ef14d60e70f42";
     public static final String LAST_ATTEMPT_ID = "1050e852-5edb-4743-92d1-b53466de3a5f";
