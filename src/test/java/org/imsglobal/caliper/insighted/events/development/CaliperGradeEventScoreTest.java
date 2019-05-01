@@ -1,5 +1,6 @@
 package org.imsglobal.caliper.insighted.events.development;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.imsglobal.caliper.CaliperSendable;
 import org.imsglobal.caliper.Envelope;
@@ -31,6 +32,8 @@ import org.junit.experimental.categories.Category;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -68,7 +71,7 @@ public class CaliperGradeEventScoreTest {
   private Membership membership;
   private GradeEvent event;
   private Envelope envelope;
-  
+
   @Before
   public void setUp() throws Exception {
     context = JsonldStringContext.getDefault();
@@ -131,10 +134,13 @@ public class CaliperGradeEventScoreTest {
 
   @Test
   public void caliperEventSerializesToJSON() throws Exception {
+    String fixture = jsonFixture("fixtures/hmh/hmh-insighted/development/caliperGradeEventScore.json");
+
+    handleSendTimeProperty(fixture);
+
     ObjectMapper mapper = TestUtils.createCaliperObjectMapper();
     String json = mapper.writeValueAsString(envelope);
 
-    String fixture = jsonFixture("fixtures/hmh/hmh-insighted/development/caliperGradeEventScore.json");
     JSONAssert.assertEquals(fixture, json, JSONCompareMode.NON_EXTENSIBLE);
   }
 
@@ -161,5 +167,14 @@ public class CaliperGradeEventScoreTest {
       .membership(membership)
       .eventTime(EVENT_TIME)
       .build();
+  }
+
+  // Workaround: sendTime is not being assigned when passed to Sensor's 'create' (Envelope) function
+  private void handleSendTimeProperty(String fixture) throws IOException, NoSuchFieldException, IllegalAccessException {
+    JsonNode node = new ObjectMapper().readTree(fixture);
+    String platformSendTime = node.get("sendTime").asText();
+    Field field = (Envelope.class).getDeclaredField("sendTime");
+    field.setAccessible(true);
+    field.set(envelope, DateTime.parse(platformSendTime));
   }
 }
