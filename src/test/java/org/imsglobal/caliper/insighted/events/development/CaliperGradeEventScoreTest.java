@@ -22,6 +22,7 @@ import org.imsglobal.caliper.entities.agent.SoftwareApplication;
 import org.imsglobal.caliper.entities.outcome.Score;
 import org.imsglobal.caliper.entities.resource.Assessment;
 import org.imsglobal.caliper.entities.resource.Attempt;
+import org.imsglobal.caliper.entities.resource.DigitalResource;
 import org.imsglobal.caliper.events.GradeEvent;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -47,13 +48,17 @@ public class CaliperGradeEventScoreTest {
 
   private static final String BASE_URN = "urn:uuid:";
   private static final String AGGREGATOR_PROGRAM_ASSESSMENT_CONTEXT = "https://www.hmhco.com/AggPA";
+  private static final String APP_PLATFORM = String.format("%s/one", AGGREGATOR_PROGRAM_ASSESSMENT_CONTEXT);
   private static final String ID = BASE_URN.concat("dc790a2d-124e-4b20-9f89-2bca87ea22d4");
   private static final String ATTEMPT_ID = BASE_URN.concat("830b77b2-f4b3-4ac3-87b0-a4fef1d7c33e");
   private static final String SCORE_ID = BASE_URN.concat("7617bd21-09bb-41fa-b2f5-d707294bce2c");
   private static final String MEMBERSHIP_ID = BASE_URN.concat("6b8fb8bb-a4b1-4367-be53-9cb78be9dab5");
   private static final String LEARNER_ID = BASE_URN.concat("d76d4cbe-0f12-4323-af07-e68566dcbcd4");
+  private static final String TEACHER_ID = BASE_URN.concat("7eba360f-5896-48d8-b8ce-23ad40892abd");
   private static final String INSTRUCTOR_ID = BASE_URN.concat("7eba360f-5896-48d8-b8ce-23ad40892abd");
   private static final String ASSIGNMENT_ID = BASE_URN.concat("376835ba-947a-47f3-a990-003c7eb11cfc");
+  private static final String ASSIGNMENT_TITLE = "Online Lesson Assessment: Studying Geography";
+  private static final String ACTIVITY_ID = BASE_URN.concat("474df95d-40e9-454d-925b-ce7a1aa40823");
   private static final String DISTRICT_ID = BASE_URN.concat("c2fb58c4-2d99-4e13-a570-24fc9dc160a5");
   private static final String SCHOOL_ID = BASE_URN.concat("baa92ba2-9d9f-4a76-8e5e-c89a5a2a09dc");
   private static final String CLASS_ID = BASE_URN.concat("dd1a3d98-5fba-466c-bff5-4eeab14672e0");
@@ -64,7 +69,7 @@ public class CaliperGradeEventScoreTest {
 
   private JsonldContext context;
   private SoftwareApplication edApp;
-  private Person learner;
+  private Person teacher;
   private CourseSection courseSection;
   private Attempt object;
   private Score score;
@@ -76,15 +81,18 @@ public class CaliperGradeEventScoreTest {
   public void setUp() throws Exception {
     context = JsonldStringContext.getDefault();
 
-    edApp = SoftwareApplication.builder().id(AGGREGATOR_PROGRAM_ASSESSMENT_CONTEXT).coercedToId(true).build();
-    learner = Person.builder().id(LEARNER_ID).build();
+    edApp = SoftwareApplication.builder().id(APP_PLATFORM).coercedToId(true).build();
+    teacher = Person.builder().id(TEACHER_ID).build();
     CaliperAgent creator = Agent.builder().id(CREATOR_ID).coercedToId(true).build();
 
     Map<String, Object> assignableExtensions = new HashMap<>();
     assignableExtensions.put("disciplineCode", DISCIPLINE_CODE);
 
     Assessment assignable = Assessment.builder()
-      .id(ASSIGNMENT_ID)
+      .id(ACTIVITY_ID)
+      .isPartOf(DigitalResource.builder().id(ASSIGNMENT_ID).coercedToId(true).build())
+      .name(ASSIGNMENT_TITLE)
+      .dateToSubmit(DateTime.parse("2019-07-21T22:59:59.000Z"))
       .creators(Collections.singletonList(creator))
       .extensions(assignableExtensions)
       .build();
@@ -100,7 +108,7 @@ public class CaliperGradeEventScoreTest {
       .attempt(Attempt.builder().id(ATTEMPT_ID).coercedToId(true).build())
       .maxScore(12)
       .scoreGiven(6)
-      .scoredBy(SoftwareApplication.builder().id(AGGREGATOR_PROGRAM_ASSESSMENT_CONTEXT).coercedToId(true).build())
+      .scoredBy(Person.builder().id(TEACHER_ID).coercedToId(true).build())
       .build();
 
     Map<String, Object> courseSectionExtensions = new HashMap<>();
@@ -158,7 +166,7 @@ public class CaliperGradeEventScoreTest {
     return GradeEvent.builder()
       .context(context)
       .id(ID)
-      .actor(learner)
+      .actor(teacher)
       .action(action)
       .object(object)
       .generated(score)
