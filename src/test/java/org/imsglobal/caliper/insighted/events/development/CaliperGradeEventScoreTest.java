@@ -58,7 +58,9 @@ public class CaliperGradeEventScoreTest {
   private static final String INSTRUCTOR_ID = BASE_URN.concat("7eba360f-5896-48d8-b8ce-23ad40892abd");
   private static final String ASSIGNMENT_ID = BASE_URN.concat("376835ba-947a-47f3-a990-003c7eb11cfc");
   private static final String ASSIGNMENT_TITLE = "Online Lesson Assessment: Studying Geography";
+  private static final String SESSION_ID = BASE_URN.concat("cb2954e9-8755-445a-8ca6-3299bfe66e2e");
   private static final String ACTIVITY_ID = BASE_URN.concat("474df95d-40e9-454d-925b-ce7a1aa40823");
+  private static final String RESOURCE_ID = "AGA_FL20E_LRN_G11U8M20L00_0001";
   private static final String DISTRICT_ID = BASE_URN.concat("c2fb58c4-2d99-4e13-a570-24fc9dc160a5");
   private static final String SCHOOL_ID = BASE_URN.concat("baa92ba2-9d9f-4a76-8e5e-c89a5a2a09dc");
   private static final String CLASS_ID = BASE_URN.concat("dd1a3d98-5fba-466c-bff5-4eeab14672e0");
@@ -89,8 +91,10 @@ public class CaliperGradeEventScoreTest {
     assignableExtensions.put("disciplineCode", DISCIPLINE_CODE);
 
     Assessment assignable = Assessment.builder()
-      .id(ACTIVITY_ID)
-      .isPartOf(DigitalResource.builder().id(ASSIGNMENT_ID).coercedToId(true).build())
+      .id(SESSION_ID)
+      .isPartOf(DigitalResource.builder().id(ACTIVITY_ID)
+        .isPartOf(DigitalResource.builder().id(RESOURCE_ID)
+          .isPartOf(DigitalResource.builder().id(ASSIGNMENT_ID).build()).build()).build())
       .name(ASSIGNMENT_TITLE)
       .dateToSubmit(DateTime.parse("2019-07-21T22:59:59.000Z"))
       .creators(Collections.singletonList(creator))
